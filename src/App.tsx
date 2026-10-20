@@ -15,13 +15,16 @@ function Filmoteka(){
     {title: "asterix", year: 1980, img: "./src/assets/grapp.jpg", strony:30}
   ]
   const albums = [
-    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaby rap", songs: [
+    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaasdasdby rap", songs: [
       {index:1, title:"Prelude", length:"0:52"},
       {index:2, title:"Czemu to nie dzialaaa", length:"0:52"},
       {index:3, title:"Prelude", length:"0:52"},
       {index:4, title:"Prelude", length:"0:52"},
       {index:5, title:"Prelude", length:"0:52"},
-      {index:6, title:"Prelude", length:"0:52"}
+      {index:6, title:"Prelude", length:"0:52"},
+      {index:7, title:"Prelude", length:"0:52"},
+      {index:8, title:"Prelude", length:"0:52"},
+      {index:9, title:"Prelude", length:"0:52"}
 
     ]},
     {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaby rap", songs: [
@@ -30,9 +33,10 @@ function Filmoteka(){
       {index:3, title:"Prelude", length:"0:52"},
       {index:4, title:"Prelude", length:"0:52"},
       {index:5, title:"Prelude", length:"0:52"},
-      {index:6, title:"Prelude", length:"0:52"}
+      {index:6, title:"Prelude", length:"0:52"},
+      {index:7, title:"Prelude", length:"0:52"}
     ]},
-    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaby rap", songs: [
+    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slabszyy rap", songs: [
       {index:1, title:"Prelude", length:"0:52"},
       {index:2, title:"fajny utwor", length:"0:54"},
       {index:3, title:"Prelude", length:"0:52"},
@@ -41,12 +45,16 @@ function Filmoteka(){
       {index:6, title:"Prelude", length:"0:52"}
     ]}
   ]
+  let ob: any;
+  let len = 0;
   return(
     <>
       <h1>Film</h1>
       <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
         {
-          filmy.map((film): any =>{
+          filmy
+          .sort((a, b) => a.title.localeCompare(b.title, "pl"))
+          .map((film): any =>{
             return(
             <Film title={film.title} year = {film.year} img={film.img} rating={film.rating}/>
           )})
@@ -76,6 +84,51 @@ function Filmoteka(){
             </Muza>
           )})
         }
+      </div>
+      <h1>Po 2010</h1>
+      <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
+        {
+          filmy
+          .map((film): any =>{
+            if(film.year > 2010){
+            return(
+            <Film title={film.title} year = {film.year} img={film.img} rating={film.rating}/>
+          )}})
+        }
+      </div>
+      <h1>Książki posortowane</h1>
+      <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
+        {
+          books
+          .sort((a, b)=> a.year - b.year)  
+          .map((book): any =>{
+            return(
+            <Ksiazka title = {book.title} year ={book.year} img={book.img} strony={book.strony}/>
+          )})
+        }
+      </div>
+      <h1>Album z największą liczbą tracków</h1>
+            <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
+        {
+          
+          albums.map((album): any =>{
+            
+            if(album.songs.length>len){
+              ob = album;
+              len = album.songs.length;
+            }
+            
+            })
+          }
+          
+            <Muza title={ob.title} year={ob.year} img={ob.img} zespol={ob.zespol} gatunek= {ob.gatunek} children={
+             ob.songs?.map((track: any): any=>{
+              return(
+                <Track index={track.index} title={track.title} length={track.length} />
+              )
+             })
+            }>
+            </Muza>
       </div>
     </>
   )
