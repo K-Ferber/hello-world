@@ -5,9 +5,9 @@ function App(){
 }
 function Filmoteka(){
   const filmy = [
-    {title: "grappa ice", year: 2024, img: "./src/assets/grapp.jpg"},
-    {title: "epoka lodowcowa", year:  2005, img: "./src/assets/grapp.jpg"},
-    {title: "chlpaki nie placzo", year: 1980, img: "./src/assets/grapp.jpg"}
+    {title: "grappa ice", year: 2024, img: "./src/assets/grapp.jpg", rating: 10.0},
+    {title: "epoka lodowcowa", year:  2005, img: "./src/assets/grapp.jpg", rating: 8.9},
+    {title: "chlpaki nie placzo", year: 1980, img: "./src/assets/grapp.jpg", rating: 9.9}
   ]
   const books = [
     {title: "dzieci z bullerbyn", year: 1950, img: "./src/assets/grapp.jpg", strony:300},
@@ -17,7 +17,7 @@ function Filmoteka(){
   const albums = [
     {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaby rap", songs: [
       {index:1, title:"Prelude", length:"0:52"},
-      {index:2, title:"Prelude", length:"0:52"},
+      {index:2, title:"Czemu to nie dzialaaa", length:"0:52"},
       {index:3, title:"Prelude", length:"0:52"},
       {index:4, title:"Prelude", length:"0:52"},
       {index:5, title:"Prelude", length:"0:52"},
@@ -32,9 +32,9 @@ function Filmoteka(){
       {index:5, title:"Prelude", length:"0:52"},
       {index:6, title:"Prelude", length:"0:52"}
     ]},
-    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaby rap", children: [
+    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaby rap", songs: [
       {index:1, title:"Prelude", length:"0:52"},
-      {index:2, title:"Prelude", length:"0:52"},
+      {index:2, title:"fajny utwor", length:"0:54"},
       {index:3, title:"Prelude", length:"0:52"},
       {index:4, title:"Prelude", length:"0:52"},
       {index:5, title:"Prelude", length:"0:52"},
@@ -48,7 +48,7 @@ function Filmoteka(){
         {
           filmy.map((film): any =>{
             return(
-            <Film title={film.title} year = {film.year} img={film.img}/>
+            <Film title={film.title} year = {film.year} img={film.img} rating={film.rating}/>
           )})
         }
       </div>
@@ -67,7 +67,7 @@ function Filmoteka(){
           albums.map((album): any =>{
             return(
             <Muza title={album.title} year={album.year} img={album.img} zespol={album.zespol} gatunek= {album.gatunek} children={
-             album.children?.map((track): any=>{
+             album.songs?.map((track): any=>{
               return(
                 <Track index={track.index} title={track.title} length={track.length} />
               )
@@ -83,13 +83,14 @@ function Filmoteka(){
 interface FilmProps{
   title:string,
   year:number,
-  img:string
+  img:string,
+  rating:number
 }
-function Film({title, year, img}: FilmProps){
+function Film({title, year, img, rating}: FilmProps){
   return(
   <div style={{display: "flex", flexDirection: "column", maxWidth: "33%"}}>
     <img src={img}></img>
-    <p><b>{title}</b></p>
+    <p><b>{title}</b><span> | {rating}★</span></p>
     <p>{year}</p>
   </div>
   )
