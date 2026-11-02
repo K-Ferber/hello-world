@@ -1,6 +1,10 @@
+import { useState } from "react";
+
 function App(){
   return(
-    <Filmoteka/>
+    <div className="container">
+      <Filmoteka/>
+    </div>
   )
 }
 function Filmoteka(){
@@ -15,7 +19,7 @@ function Filmoteka(){
     {title: "asterix", year: 1980, img: "./src/assets/grapp.jpg", strony:30}
   ]
   const albums = [
-    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaasdasdby rap", songs: [
+    {title: "The Dark Side of the Moon", year:2026, img: "./src/assets/grapp.jpg", zespol: "Pink Floyd", gatunek: "Prog rock", songs: [
       {index:1, title:"Prelude", length:"0:52"},
       {index:2, title:"Czemu to nie dzialaaa", length:"0:52"},
       {index:3, title:"Prelude", length:"0:52"},
@@ -27,7 +31,7 @@ function Filmoteka(){
       {index:9, title:"Prelude", length:"0:52"}
 
     ]},
-    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slaby rap", songs: [
+    {title: "Slippery When Wet", year:2026, img: "./src/assets/grapp.jpg", zespol: "Bon Jovi", gatunek: "Hard Rock", songs: [
       {index:1, title:"Prelude", length:"0:52"},
       {index:2, title:"Prelude", length:"0:52"},
       {index:3, title:"Prelude", length:"0:52"},
@@ -36,7 +40,7 @@ function Filmoteka(){
       {index:6, title:"Prelude", length:"0:52"},
       {index:7, title:"Prelude", length:"0:52"}
     ]},
-    {title: "gargamelvlog nowy album", year:2026, img: "./src/assets/grapp.jpg", zespol: "grgml", gatunek: "slabszyy rap", songs: [
+    {title: "Black Sabbath", year:2026, img: "./src/assets/grapp.jpg", zespol: "Black Sabbath", gatunek: "Metal", songs: [
       {index:1, title:"Prelude", length:"0:52"},
       {index:2, title:"fajny utwor", length:"0:54"},
       {index:3, title:"Prelude", length:"0:52"},
@@ -47,37 +51,123 @@ function Filmoteka(){
   ]
   let ob: any;
   let len = 0;
+
+  const [filmyOpen, setFilmyOpen] = useState(true);
+  const [booksOpen, setBooksOpen] = useState(true);
+  const [albumsOpen, setAlbumsOpen] = useState(true);
+  const [po2010Open, setPo2010Open] = useState(true);
+  const [sortedBooksOpen, setSortedBooksOpen] = useState(true);
+  const [bestAlbumOpen, setBestAlbumOpen] = useState(true);
+  const [movieSearch, setMovieSearch] = useState("");
+  const [albumSearch, setAlbumSearch] = useState("");
+  const [bookSearch, setBookSearch] = useState("");
+
+  const filteredMovies = filmy.filter((film) =>
+    film.title.toLowerCase().includes(movieSearch.toLowerCase())
+  );
+
+  let nf = "";
+
+  if (filteredMovies.length === 0) {
+    nf = "Nie znaleziono filmów";
+  }
+
+
   return(
-    <>
-      <h1>Film</h1>
-      <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
+<>
+
+{/* ------------------------------------- FILMY ------------------------------------- */}
+
+<h1 className="display-1" onClick={() => setFilmyOpen(!filmyOpen)} style={{cursor: "pointer", color: "black"}}>
+  {filmyOpen ? "▾" : "▸"} Filmy
+</h1>
+
+<input type="text" className="form-control"  placeholder="Wpisz tytuł"
+  onChange={(e) => {
+    setMovieSearch(e.target.value);
+    console.log(e.target.value);
+  }}
+  style={{marginBottom:"10px"}}
+  
+/>
+
+{filmyOpen && (
+      <div className="row">
         {
           filmy
+          .filter((film) =>
+            film.title.toLowerCase().includes(movieSearch.toLowerCase())
+          )
           .sort((a, b) => a.title.localeCompare(b.title, "pl"))
           .map((film): any =>{
             return(
             <Film title={film.title} year = {film.year} img={film.img} rating={film.rating}/>
-          )})
+          )}
+          )
         }
-      </div>
-      <h1>Ksiazka</h1>
-      <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
+
+        {nf && <p>{nf}</p>}
+
+        </div>
+        
+)}
+
+{/* ------------------------------------- KSIĄŻKI ------------------------------------- */}
+
+<h1 className="display-1" onClick={() => setBooksOpen(!booksOpen)} style={{cursor: "pointer", color: "black"}}>
+  {booksOpen ? "▾" : "▸"} Książki
+</h1>
+
+<input type="text" className="form-control" placeholder="Wpisz tytuł"
+  onChange={(e) => {
+    setBookSearch(e.target.value);
+    console.log(e.target.value);
+  }}
+  style={{marginBottom:"10px"}}
+/>
+
+{booksOpen && (
+  <div className="row">
+    {
+      books
+        .filter((book) =>
+            book.title.toLowerCase().includes(bookSearch.toLowerCase())
+          )
+        .map((book): any =>{
+        return(
+        <Ksiazka title = {book.title} year ={book.year} img={book.img} strony={book.strony}/>
+      )})
+    }
+  </div>
+)}
+
+{/* -------------------------------------- ALBUMY ------------------------------------- */}
+
+<h1 className="display-1" onClick={() => setAlbumsOpen(!albumsOpen)} style={{cursor: "pointer", color: "black"}}>
+  {albumsOpen ? "▾" : "▸"} Albumy
+</h1>
+
+<input type="text" className="form-control" placeholder="Wpisz tytuł"
+  onChange={(e) => {
+    setAlbumSearch(e.target.value);
+    console.log(e.target.value);
+  }}
+  style={{marginBottom:"10px"}}
+/>
+
+{albumsOpen && (
+      <div className="row">
         {
-          books.map((book): any =>{
-            return(
-            <Ksiazka title = {book.title} year ={book.year} img={book.img} strony={book.strony}/>
-          )})
-        }
-      </div>
-      <h1>Muzyka</h1>
-      <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
-        {
-          albums.map((album): any =>{
+          albums
+            .filter((album) =>
+              album.title.toLowerCase().includes(albumSearch.toLowerCase())
+            )
+            .map((album): any =>{
             return(
             <Muza title={album.title} year={album.year} img={album.img} zespol={album.zespol} gatunek= {album.gatunek} children={
              album.songs?.map((track): any=>{
               return(
-                <Track index={track.index} title={track.title} length={track.length} />
+                <Track index={track.index} title={track.title} length={track.length} album={album.title} />
               )
              })
             }>
@@ -85,8 +175,15 @@ function Filmoteka(){
           )})
         }
       </div>
-      <h1>Po 2010</h1>
-      <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
+)}
+
+{/* -------------------------------------- INNE ------------------------------------- */}
+
+      <h1 className="display-1" onClick={() => setPo2010Open(!po2010Open)} style={{cursor: "pointer", color: "black"}}>
+        {po2010Open ? "▾" : "▸"} Po 2010
+      </h1>
+{po2010Open && (
+      <div className="row">
         {
           filmy
           .map((film): any =>{
@@ -96,8 +193,12 @@ function Filmoteka(){
           )}})
         }
       </div>
-      <h1>Książki posortowane</h1>
-      <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
+)}
+      <h1 className="display-1" onClick={() => setSortedBooksOpen(!sortedBooksOpen)} style={{cursor: "pointer", color: "black"}}>
+        {sortedBooksOpen ? "▾" : "▸"} Książki posortowane
+      </h1>
+{sortedBooksOpen && (
+      <div className="row">
         {
           books
           .sort((a, b)=> a.year - b.year)  
@@ -107,8 +208,12 @@ function Filmoteka(){
           )})
         }
       </div>
-      <h1>Album z największą liczbą tracków</h1>
-            <div style={{display: "flex", flexDirection: "row", margin: "24px", gap: "12px",}}>
+)}
+      <h1 className="display-1" onClick={() => setBestAlbumOpen(!bestAlbumOpen)} style={{cursor: "pointer", color: "black"}}>
+        {bestAlbumOpen ? "▾" : "▸"} Album z największą liczbą tracków
+      </h1>
+{bestAlbumOpen && (
+            <div className="row">
         {
           
           albums.map((album): any =>{
@@ -124,12 +229,13 @@ function Filmoteka(){
             <Muza title={ob.title} year={ob.year} img={ob.img} zespol={ob.zespol} gatunek= {ob.gatunek} children={
              ob.songs?.map((track: any): any=>{
               return(
-                <Track index={track.index} title={track.title} length={track.length} />
+                  <Track index={track.index} title={track.title} length={track.length} album={ob.title} />
               )
              })
             }>
             </Muza>
       </div>
+)}
     </>
   )
 }
@@ -140,11 +246,27 @@ interface FilmProps{
   rating:number
 }
 function Film({title, year, img, rating}: FilmProps){
-  return(
-  <div style={{display: "flex", flexDirection: "column", maxWidth: "33%"}}>
-    <img src={img}></img>
-    <p><b>{title}</b><span> | {rating}★</span></p>
-    <p>{year}</p>
+  return (
+  <div className="col" >
+    <div className="card h-100">
+      <img src={img} className="card-img-top" alt={title} />
+
+      <div className="card-body"  style={{ cursor: "pointer" }} onClick={() => console.log(`Wybrano film: ${title}`)}>
+        <h5 className="card-title">{title}</h5>
+        <p className="card-text">{rating}★</p>
+        <button className="btn btn-outline-dark" onClick={(e) => {
+          e.stopPropagation();
+          console.log(`Pokaż szczegóły dla ${title}`);
+        }}>Szczegóły</button>
+        <p className="card-text">{year}</p>
+
+        
+
+        {rating >= 8 && (
+          <span className="badge bg-primary">Polecany</span>
+        )}
+      </div>
+    </div>
   </div>
   )
 }
@@ -156,11 +278,17 @@ interface BookProps{
 }
 function Ksiazka({title, year, img, strony}: BookProps){
   return(
-  <div style={{display: "flex", flexDirection: "column", maxWidth: "33%"}}>
-    <img src={img}></img>
-    <p><b>{title}</b></p>
-    <p>{year}</p>
-    <p>{strony}</p>
+   <div className="col">
+    <div className="card h-100">
+      <img src={img} className="card-img-top" alt={title} />
+
+      <div className="card-body">
+        <h5 className="card-title">{title}</h5>
+        <p className="card-text">Rok wydania: {year}</p>
+        <p className="card-text">Liczba stron: {strony}</p>
+        {year < 2000 && (<span className="badge bg-primary">Klasyka</span>)}
+      </div>
+    </div>
   </div>
   )}
 interface MusicProps{
@@ -172,28 +300,60 @@ interface MusicProps{
   children:any
 }
 function Muza({title, year, img, zespol, gatunek, children}:MusicProps){
-return(
-<div style={{display: "flex", flexDirection: "column", maxWidth: "33%"}}>
-  <img src={img}></img>
-  <p><b>{title}</b></p>
-  <p>{zespol}</p>
-  <p>{gatunek}</p>
-  <p>{year}</p>
-  {children}
-</div>
-)}
+
+return (
+  <div className="col">
+    <div className="card h-100">
+      <img src={img} className="card-img-top" alt={title} />
+
+      <div className="card-body">
+        <h5 className="card-title">{title}</h5>
+        <p className="card-text">{zespol}</p>
+        <p className="card-text">{gatunek}</p>
+        <p className="card-text">{year}</p>
+
+        {children && children.length > 0 ? (
+           <table className="table table-striped table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Lp.</th>
+                  <th scope="col">Tytuł utworu</th>
+                  <th scope="col">Długość</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {children}
+              </tbody>
+            </table>
+        ) : (<div className="alert alert-warning" role="alert">Brak utworów</div>)}
+      </div>
+    </div>
+  </div>
+);}
 interface TrackProps{
   index: number,
   title: string,
-  length: string
+  length: string,
+  album: string
 }
 function Track(props: TrackProps) {
+
+  function handleSongClick(songTitle: string) {
+    return () => {
+      console.log(`Wybrano utwór: ${songTitle} z ${props.album}`);
+    }
+    }
+
   return (
-    <tr>
-      <td>{props.index}</td>
-      <td>{props.title}</td>
-      <td>{props.length}</td>
-    </tr>
+  
+      <tr style={{cursor:"pointer"} } onClick={handleSongClick(props.title)}>
+        <td>{props.index}</td>
+        <td>{props.title}</td>
+        <td>{props.length}</td>
+      </tr>
+    
+    
   );
 }
 export default App
