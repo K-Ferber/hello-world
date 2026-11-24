@@ -10,27 +10,27 @@ function App(){
 
 
 function CharakterForm(){
-  const [imie, setUserName] = useState("")
-  const [rasa, setRasa] = useState("wybierz")
-  const [klasa, setKlasa] = useState("wybierz")
-  const [poziom, setPoziom] = useState(1)
-  const [opis, setOpis] = useState("")
-  const [czyPubliczny, setCzyPubliczny] = useState(true)
-  const [showCharacterCard, setShowCharacterCard] = useState(false);
+  const [characters, setCharacters] = useState<any[]>([]);
   const [opisCounter, setOpisCounter] = useState(0);
 
-const formData = {
-  imie,
-  rasa,
-  klasa,
-  poziom,
-  opis,
-  czyPubliczny
-};
+const [formData, setFormData] = useState({
+  imie: "",
+  rasa: "wybierz",
+  klasa: "wybierz",
+  poziom: 1,
+  opis: "",
+  czyPubliczny: true
+});
   const [errors, setErrors] = useState<any>({})
 
 
-
+  function handleChange(event: any) {
+    const { name, value} = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  }
 
   function validateForm() {
     const errors: any = {};
@@ -70,7 +70,7 @@ function handleSubmit(event: any) {
     console.log("Formularz zawiera błędy:", validationErrors);
   } else {
     console.log("Formularz został poprawnie wypełniony:", formData);
-    setShowCharacterCard(true);
+    setCharacters([...characters, formData]);
   }
 }
 
@@ -80,15 +80,18 @@ function handleSubmit(event: any) {
         <label htmlFor="imie">Imię postaci:</label>
         <input 
           type="text" 
-          value={imie}
-          onChange={(event) => setUserName(event.target.value)}/>
-          {errors.imie && <span style={{ color: "red" }}>{errors.imie}</span>}
+          value={formData.imie}
+          onChange={handleChange}
+          name="imie"
+        />
+        {errors.imie && <span style={{ color: "red" }}>{errors.imie}</span>}
         <br/>
         <label htmlFor="rasa">Rasa:</label>
         <select 
-          value={rasa}
-          onChange={(event) => setRasa(event.target.value)}
-          >
+          value={formData.rasa}
+          onChange={handleChange}
+          name="rasa"
+        >
           <option value="wybierz" disabled>Wybierz rasę</option>
           <option value="czlowiek">Człowiek</option>
           <option value="elf">Elf</option>
@@ -99,8 +102,10 @@ function handleSubmit(event: any) {
         <br/>
         <label htmlFor="klasa">Klasa:</label>
         <select
-          value={klasa}
-          onChange={(event) => setKlasa(event.target.value)}>
+          value={formData.klasa}
+          onChange={handleChange}
+          name="klasa"
+        > 
           <option value="wybierz" disabled>Wybierz klasę</option>
           <option value="wojownik">Wojownik</option>
           <option value="mag">Mag</option>
@@ -110,37 +115,37 @@ function handleSubmit(event: any) {
         <br/>
         <label htmlFor="poziom">Poziom:</label>
         <input type="number" id="poziom"
-          value={poziom}
-          onChange={(event) => setPoziom(parseInt(event.target.value) || 1)}/>
+          value={formData.poziom}
+          onChange={handleChange}
+          name="poziom"
+        />
         {errors.poziom && <span style={{ color: "red" }}>{errors.poziom}</span>}
         <br/>
         <label htmlFor="opis">Opis:</label>
-        <textarea id="opis" value={opis} onChange={(event) => {setOpis(event.target.value)
-          setOpisCounter(event.target.value.length)
-        }}></textarea>
+        <textarea id="opis" value={formData.opis} onChange={event => {handleChange(event); setOpisCounter(event.target.value.length)}} name="opis"></textarea>
         <p>{opisCounter}/200</p>
         {errors.opis && <span style={{ color: "red" }}>{errors.opis}</span>}
         <br/>
         <label htmlFor="czyPubliczny">
-          <input type="checkbox" id="czyPubliczny" checked={czyPubliczny} onChange={(event) => setCzyPubliczny(event.target.checked)} />
+          <input type="checkbox" id="czyPubliczny" checked={formData.czyPubliczny} onChange={handleChange} name="czyPubliczny" />
           Postać publiczna
         </label>
         
         <br/>
         <button type="submit">Stwórz postać</button>
       </form>
-      {showCharacterCard && (
-        <div className="card" style={{ width: "18rem", margin: "auto" }}>
-          <div className="card-body">
-            <p className="card-header">Postać fikcyjna:</p>
-            <p className="card-title">Imię: {imie}</p>
-            <p className="card-text">Rasa: {rasa}</p>
-            <p className="card-text">Klasa: {klasa}</p>
-            <p className="card-text">Poziom: {poziom}</p>
-            <p className="card-text">Opis: {opis}</p>
-            <p className="card-warning">{czyPubliczny ? "Publiczna" : "Prywatna"}</p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginTop: "1rem" }}>
+        {characters.map((character, index) => (
+          <div className="card" style={{ width: "18rem" }} key={index}>
+            <p>Imię: {character.imie}</p>
+            <p>Rasa: {character.rasa}</p>
+            <p>Klasa: {character.klasa}</p>
+            <p>Poziom: {character.poziom}</p>
+            <p>Opis: {character.opis}</p>
+            <p>Publiczna: {character.czyPubliczny ? "Tak" : "Nie"}</p>
           </div>
-        </div>)}
+        ))}
+    </div>
     </>
   )
 
